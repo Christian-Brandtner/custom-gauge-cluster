@@ -1,25 +1,34 @@
-Speedometer - Hall effect sensor, magnets
-Tachometer - Hall effect sensor
+Speedometer - Hall Effect Sensor, Magnets
+Tachometer - Hall Effect Sensor
 Odometer - Speedometer
 Fuel level - Analog to Digital Converter (ADC)
 Oil pressure - ADC
 Engine temp - ADC
-Voltmeter - Step down converter, ADC
-Seatbelt - voltage comparator
-Trip Counter - Speedometer or Odometer
+Voltmeter - Voltage Divider, ADC (optional)
+Seatbelt - Voltage Comparator OR Voltage Divider, ADC (optional)
+Trip Counter - Speedometer OR Odometer
 Clock
-High beams, Fog lights, Turn signal/hazards - voltage comparator x3
+High beams, Fog lights, Turn signal/hazards - Voltage Comparator x3
+Raspberry Pi 4 Model B - Step Down Converter
+Shift Light
+Rev match light
 
-Raspberry Pi 4 Model B - power source (12V to 5V converter), 
 
-hall effect sensor - 5.99 Amazon
-magnets - 8.99 Amazon
-ADC 4 channel - 2.22 Ebay
-stepdown converter - 13.49 Amazon
-voltage comparator x4 - 6.32 + 3.20 shipping Ebay
-Raspberry Pi 4 Model B 2GB with heatsink - 45.95 Ardafruit
-Controller board - 17.74 +2.00 shipping Ebay
+AMAZON:
+ 5.99 - Hall Effect Sensor 5pcs
+ 8.99 - Magnets 40pcs
+ 5.89 - Voltage Detection Module (Voltage divider) 5pcs
+ 6.10 - Step Down Converter 2pcs
 
-Total: $105.90 USD
+EBAY:
+ 9.52 - Voltage Comparator Module
+19.74 - Controller Board
+ 4.22 - 16 bit 4 channel ADC x2
+
+ADAFRUIT:
+46.95 - Raspberry Pi 4 Model B + Heat Sink
+
+
+Total: $107.40 USD
 
 
