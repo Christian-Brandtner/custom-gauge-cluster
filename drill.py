@@ -14,7 +14,7 @@ one_count = 0
 time_before = time.perf_counter()
 
 def calc_engine_RPM(seconds):
-    rpm = 60*(1/seconds)
+    rpm = 60 / seconds
     return rpm
 
 try:
@@ -37,8 +37,8 @@ try:
             counter = (counter + 1) % avg_iterate
             avg = sum(avg_array) / avg_iterate
             rounded_avg = round(avg)
-            if current_time - time_before >= 0.0161616:
-                time_before = current_time
+            # if current_time - time_before >= 0.0161616: # for 60fps output
+            #     time_before = current_time 
 except KeyboardInterrupt:
     print("\n Exiting program")
 finally:
