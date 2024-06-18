@@ -1,7 +1,7 @@
 import time
 import RPi.GPIO as GPIO
 
-IGNITION = 0 # 0 for distributor, 1 for coil on plug, 2 for drill or direct RPM with no engine
+IGNITION = 1 # 0 for distributor, 1 for coil on plug, 2 for drill or direct RPM with no engine
 
 
 tach_pin = 17
@@ -45,7 +45,7 @@ try:
         if current_state == GPIO.HIGH:
             edge_check = 0
             prev_state = 1
-            avg_array[counter] = calc_engine_RPM(time_array[counter])
+            avg_array[counter] = calc_engine_RPM(time_between, IGNITION)
             counter = (counter + 1) % avg_iterate
             avg = sum(avg_array) / avg_iterate
             rounded_avg = round(avg)
