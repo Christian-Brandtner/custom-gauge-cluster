@@ -3,8 +3,13 @@ from gpiozero import DigitalInputDevice
 
 speed_pin = 17
 
+
+# UPDATE TO USE CLASS
+# ALSO, REMOVE ALL COMMENTS, ADD SPEED LEVEL FUNCTIONALITY, AND EXPERIMENT WITH bounce_time, USE EXPONENTIAL SMOOTHING
+
+
 # Set up the pin with internal pull-up resistor
-hall_sensor = DigitalInputDevice(speed_pin, pull_up=True, bounce_time=0.005)
+hall_sensor = DigitalInputDevice(speed_pin, pull_up=True, bounce_time=0.001)
 
 AVERAGE_ITERATE = 20
 
