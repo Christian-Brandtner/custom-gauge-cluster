@@ -7,6 +7,13 @@ speed_pin = 17
 # UPDATE TO USE CLASS
 # ALSO, REMOVE ALL COMMENTS, ADD SPEED LEVEL FUNCTIONALITY, AND EXPERIMENT WITH bounce_time, USE EXPONENTIAL SMOOTHING
 
+# SPEED STEP
+    # if(all magnet pulse > 7200 (720*10magnets aka 15mph)){
+    #   if pulse count == 2, 4, 6, 8, 10 {calculate speed based on rpm/5} 
+    #}
+    # if(all pulse > 21000) {calculate based on rpm/10}
+    # else(calc based on all pulse)
+
 
 # Set up the pin with internal pull-up resistor
 hall_sensor = DigitalInputDevice(speed_pin, pull_up=True, bounce_time=0.001)
@@ -38,12 +45,11 @@ def smooth_speed():
     return rounded_avg
 
 def hall_detect():
-    global prev_time, prev_state, edge_check, counter, time_between
+    global prev_time, counter, time_between
     time_between = time.perf_counter() - prev_time
     prev_time = time.perf_counter()
     counter = (counter + 1) % AVERAGE_ITERATE
     
-
 hall_sensor.when_activated = hall_detect
 
 try:
