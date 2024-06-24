@@ -1,4 +1,5 @@
 import time
+import math
 from gpiozero import DigitalInputDevice
 
 speed_pin = 17
@@ -11,6 +12,11 @@ speed_pin = 17
 
 
 hall_sensor = DigitalInputDevice(speed_pin, pull_up=True, bounce_time=0.001)
+
+
+# temporary constants
+TIRE_DIAMETER = 26
+DRIVE_RATIO = 3.73
 
 AVERAGE_ITERATE = 20
 MAGNET_COUNT = 10
@@ -35,16 +41,22 @@ def calc_seconds(seconds):
         seconds = time_array[0]
     return seconds
 
-def calc_speed(seconds):
+def calc_shaft_rpm(seconds):
     if seconds == 0 or seconds > 1.2:
         return 0
     else:
-        speed = 60 / seconds
-        return speed
+        rpm = 60 / seconds
+        return rpm
+    
+def calc_speed():
+    tire_circumference = math.PI*TIRE_DIAMETER
+    wheel_rpm = smooth_rpm() / DRIVE_RATIO
+    speed = (tire_circumference*wheel_rpm)/1056
+    return speed
 
-def smooth_speed():
+def smooth_rpm():
     global avg_counter, avg_array, time_between
-    avg_array[avg_counter] = calc_speed(calc_seconds(time_array))
+    avg_array[avg_counter] = calc_shaft_rpm(calc_seconds(time_array))
     avg = sum(avg_array) / AVERAGE_ITERATE
     rounded_avg = round(avg)
     return rounded_avg
@@ -62,7 +74,7 @@ hall_sensor.when_activated = hall_detect
 try:
     while True:
         time.sleep(1/60)
-        print(smooth_speed())
+        print(calc_speed())
 except KeyboardInterrupt:
     print("\nExiting program")
 finally:
