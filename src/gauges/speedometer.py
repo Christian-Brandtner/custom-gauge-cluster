@@ -1,23 +1,23 @@
 import time
 import math
+from utils.config import get_vehicle_config
 from gpiozero import DigitalInputDevice
 
 speed_pin = 17
 
 
 # UPDATE TO USE CLASS
-# ALSO, REMOVE ALL COMMENTS, ADD SPEED LEVEL FUNCTIONALITY, AND EXPERIMENT WITH bounce_time, USE EXPONENTIAL SMOOTHING
+# EXPERIMENT WITH bounce_time, USE EXPONENTIAL SMOOTHING
 
-# CREATE FUNCTION TO CALCULATE TIME_BETWEEN AT < 15, < 30 AND > 30 MPH. DONE AT STARTUP, BASED ON CONFIGS LIKE TIRE SIZE, DRIVE RATIO ETC. 
 
 
 hall_sensor = DigitalInputDevice(speed_pin, pull_up=True, bounce_time=0.001)
+vehicle_config = get_vehicle_config()
 
+TIRE_DIAMETER = vehicle_config.get('TIRE_DIAMETER')
+DRIVE_RATIO = vehicle_config.get('DRIVE_RATIO')
 
-# temporary constants
-TIRE_DIAMETER = 26
-DRIVE_RATIO = 3.73
-
+INCHES_PER_MIN_TO_MPH = 1056
 AVERAGE_ITERATE = 20
 MAGNET_COUNT = 10
 
@@ -32,12 +32,19 @@ avg_counter = 0
 edge_check = 0
 prev_state = 1
 
+def calc_speed_time():
+    speed_step = [15, 30]
+    speed_time = [0] * len(speed_step)
+    for index, speed in enumerate(speed_step):
+        speed_time[index] = 6 / (DRIVE_RATIO * ((INCHES_PER_MIN_TO_MPH * speed) / (math.pi * TIRE_DIAMETER)))
+    return speed_time
+
 def calc_seconds(seconds):
-    if seconds > 0.00835: # < 15mph
+    if seconds > calc_speed_time()[0]:
         return seconds
-    elif seconds < 0.00835 and seconds > 0.004147: # hard coded between 15 and 30mph
-        seconds = sum(time_array[0:9:2]) / 5
-    elif seconds < 0.004147: # > 30mph
+    elif seconds < calc_speed_time()[1] and seconds >= calc_speed_time()[0]:
+        seconds = sum(time_array[0:9:2]) / (MAGNET_COUNT//2)
+    elif seconds < calc_speed_time()[1]:
         seconds = time_array[0]
     return seconds
 
@@ -49,9 +56,9 @@ def calc_shaft_rpm(seconds):
         return rpm
     
 def calc_speed():
-    tire_circumference = math.PI*TIRE_DIAMETER
+    tire_circumference = math.pi*TIRE_DIAMETER
     wheel_rpm = smooth_rpm() / DRIVE_RATIO
-    speed = (tire_circumference*wheel_rpm)/1056
+    speed = (tire_circumference*wheel_rpm)/INCHES_PER_MIN_TO_MPH
     return speed
 
 def smooth_rpm():
@@ -61,8 +68,8 @@ def smooth_rpm():
     rounded_avg = round(avg)
     return rounded_avg
 
-def hall_detect():
-    global prev_time, avg_counter, time_between
+def hall_detect(): # update when sensor activated
+    global prev_time, avg_counter, time_between, time_counter
     time_between = time.perf_avg_counter() - prev_time
     prev_time = time.perf_avg_counter()
     avg_counter = (avg_counter + 1) % AVERAGE_ITERATE
