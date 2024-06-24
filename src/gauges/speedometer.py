@@ -3,10 +3,12 @@ import math
 from utils.config import get_vehicle_config
 from gpiozero import DigitalInputDevice
 
+
 class Speedometer:
     def __init__(self, speed_pin):
         self.speed_pin = speed_pin
-        self.hall_sensor = DigitalInputDevice(self.speed_pin, pull_up=True, bounce_time=0.001)
+        self.hall_sensor = DigitalInputDevice(
+            self.speed_pin, pull_up=True, bounce_time=0.001)
         self.vehicle_config = get_vehicle_config()
         self.TIRE_DIAMETER = self.vehicle_config.get('TIRE_DIAMETER')
         self.DRIVE_RATIO = self.vehicle_config.get('DRIVE_RATIO')
@@ -22,9 +24,10 @@ class Speedometer:
 
     def calc_speed_time(self):
         speed_step = [15, 30]
-        speed_time = [0] * len(speed_step)
+        speed_time = [0.0000] * len(speed_step)
         for index, speed in enumerate(speed_step):
-            speed_time[index] = 6 / (self.DRIVE_RATIO * ((self.INCHES_PER_MIN_TO_MPH * speed) / (math.pi * self.TIRE_DIAMETER)))
+            speed_time[index] = 6 / (self.DRIVE_RATIO * (
+                (self.INCHES_PER_MIN_TO_MPH * speed) / (math.pi * self.TIRE_DIAMETER)))
         return speed_time
 
     def calc_seconds(self, seconds):
@@ -50,7 +53,8 @@ class Speedometer:
         return speed
 
     def smooth_rpm(self):
-        self.avg_array[self.avg_counter] = self.calc_shaft_rpm(self.calc_seconds(self.time_array))
+        self.avg_array[self.avg_counter] = self.calc_shaft_rpm(
+            self.calc_seconds(self.time_array[self.time_counter]))
         avg = sum(self.avg_array) / self.AVERAGE_ITERATE
         rounded_avg = round(avg)
         return rounded_avg
@@ -59,7 +63,7 @@ class Speedometer:
         self.time_between = time.perf_counter() - self.prev_time
         self.prev_time = time.perf_counter()
         self.avg_counter = (self.avg_counter + 1) % self.AVERAGE_ITERATE
-        self.time_counter = (self.time_counter + 1) % self.MAGNET_COUNT
+        self.time_counter = (self.time_counter + 1) % self.MAGNET_COUNT-1
         self.time_array[self.time_counter] = self.time_between
 
     def run(self):
@@ -72,8 +76,3 @@ class Speedometer:
             print("\nExiting program")
         finally:
             pass
-
-# Instantiate and run the speedometer
-if __name__ == "__main__":
-    speedometer = Speedometer(speed_pin=17)
-    speedometer.run()
