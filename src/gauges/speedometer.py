@@ -27,11 +27,11 @@ edge_check = 0
 prev_state = 1
 
 def calc_seconds(seconds):
-    if seconds > 0.00835:
+    if seconds > 0.00835: # < 15mph
         return seconds
-    elif seconds < 0.00835 and seconds > 0.004147:
+    elif seconds < 0.00835 and seconds > 0.004147: # hard coded between 15 and 30mph
         seconds = sum(time_array[0:9:2]) / 5
-    elif seconds < 0.004147:
+    elif seconds < 0.004147: # > 30mph
         seconds = time_array[0]
     return seconds
 
