@@ -68,11 +68,3 @@ class Speedometer:
 
     def run(self):
         self.hall_sensor.when_activated = self.hall_detect
-        try:
-            while True:
-                time.sleep(1 / 60)
-                print(self.calc_speed())
-        except KeyboardInterrupt:
-            print("\nExiting program")
-        finally:
-            pass

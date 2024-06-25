@@ -2,5 +2,9 @@
     "VEHICLE": {
         "TIRE_DIAMETER": 26,
         "DRIVE_RATIO": 3.73
+    }, 
+    "DISPLAY": {
+        "RESOLUTION_X": 1024,
+        "RESOLUTION_Y": 768
     }
 }

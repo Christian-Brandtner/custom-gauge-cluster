@@ -12,6 +12,9 @@ def get_config_section(section_name):
 def get_vehicle_config():
     return get_config_section('VEHICLE')
 
+def get_display_config():
+    return get_config_section('DISPLAY')
+
 
 
 
