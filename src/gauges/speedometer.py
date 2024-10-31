@@ -18,7 +18,7 @@ class Speedometer:
         self.time_between = time.perf_counter()
         self.prev_time = time.perf_counter()
         self.avg_array = [0.0000] * self.AVERAGE_ITERATE
-        self.time_array = [0.0000] * (self.MAGNET_COUNT - 1)
+        self.time_array = [0.0000] * (self.MAGNET_COUNT)
         self.avg_counter = 0
         self.time_counter = 0
 
