@@ -12,7 +12,7 @@ if __name__ == "__main__":
     
 try:
     while True:
-        time.sleep(1 / 20)
+        time.sleep(1)
         # print(speedometer.calc_speed())
         
 except KeyboardInterrupt:

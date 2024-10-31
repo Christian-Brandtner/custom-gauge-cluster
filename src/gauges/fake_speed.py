@@ -9,7 +9,7 @@ class FakeSpeedometer:
         self.TIRE_DIAMETER = self.vehicle_config.get('TIRE_DIAMETER')
         self.DRIVE_RATIO = self.vehicle_config.get('DRIVE_RATIO')
         self.INCHES_PER_MIN_TO_MPH = 1056
-        self.AVERAGE_ITERATE = 75
+        self.AVERAGE_ITERATE = 100
         self.MAGNET_COUNT = 10
         self.time_between = time.perf_counter()
         self.prev_time = time.perf_counter()
