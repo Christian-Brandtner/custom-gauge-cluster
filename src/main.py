@@ -1,16 +1,22 @@
 import time
-import gauges.speedometer
+#import gauges.speedometer
+# import gauges.fake_speed
+import display
 
 
 if __name__ == "__main__":
-    speedometer = gauges.speedometer.Speedometer(speed_pin=17)
-    speedometer.run()
+    #speedometer = gauges.speedometer.Speedometer(speed_pin=17)
+    # speedometer = gauges.fake_speed.FakeSpeedometer()
+    # speedometer.run()
+    display.run()
     
 try:
     while True:
-        time.sleep(1 / 60)
-        print(speedometer.calc_speed())
+        time.sleep(1 / 20)
+        # print(speedometer.calc_speed())
+        
 except KeyboardInterrupt:
+    
     print("\nExiting program")
 finally:
     pass
