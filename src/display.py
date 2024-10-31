@@ -12,8 +12,8 @@ SCREEN_HEIGHT = get_display_config().get('RESOLUTION_Y')
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-gauge_bg = pygame.image.load('../assets/images/gauges/speedometer/speed_gauge_bg.png')
-gauge_fg = pygame.image.load('../assets/images/gauges/speedometer/speed_gauge.png')
+gauge_bg = pygame.image.load('assets/images/gauges/speedometer/speed_gauge_bg.png')
+gauge_fg = pygame.image.load('assets/images/gauges/speedometer/speed_gauge.png')
 
 gauge_bg_rect = gauge_bg.get_rect()
 gauge_fg_rect = gauge_fg.get_rect()
