@@ -1,6 +1,6 @@
 import json
 
-def load_config(file_path='configs/config.json'):
+def load_config(file_path='../configs/config.json'):
 #def load_config(file_path='../configs/config.json'):
     with open(file_path, 'r') as file:
         config = json.load(file)
