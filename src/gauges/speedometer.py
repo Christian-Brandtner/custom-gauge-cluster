@@ -3,7 +3,6 @@ import math
 from utils.config import get_vehicle_config
 from gpiozero import DigitalInputDevice
 
-
 class Speedometer:
     def __init__(self, speed_pin):
         self.speed_pin = speed_pin

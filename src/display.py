@@ -31,19 +31,19 @@ current_time = 0.0
 between_time = 0.0
 
 
-fake_speedometer = speed.FakeSpeedometer()
+speedometer = speed.Speedometer()
 try:
     while True:
 
         current_time = float(time.perf_counter())
         speed_text = font.render(
-            f"{round(fake_speedometer.calc_speed(), 1)}", True, (235, 235, 235))
-        angle = -((round(fake_speedometer.calc_speed(), 4) / MAX_SPEED) * MAX_ANGLE)
+            f"{round(speedometer.calc_speed(), 1)}", True, (235, 235, 235))
+        angle = -((round(speedometer.calc_speed(), 4) / MAX_SPEED) * MAX_ANGLE)
 
         if float(current_time - prev_time) >= float(1/40):
             prev_time = current_time
             screen.fill((0, 0, 0))
-            fake_speedometer.hall_detect()
+            speedometer.hall_detect()
             rotated_gauge_bg = pygame.transform.rotate(gauge_bg, angle)
             rotated_gauge_bg_rect = rotated_gauge_bg.get_rect(
                 center=gauge_fg_rect.center)
