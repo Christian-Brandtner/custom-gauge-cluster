@@ -3,7 +3,7 @@ import math
 from utils.config import get_vehicle_config
 
 
-class Speedometer:
+class   Speedometer:
     def __init__(self):
         self.vehicle_config = get_vehicle_config()  
         self.TIRE_DIAMETER = self.vehicle_config.get('TIRE_DIAMETER')
