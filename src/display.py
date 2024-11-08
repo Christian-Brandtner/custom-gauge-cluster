@@ -1,58 +1,63 @@
 import pygame
 from utils.config import get_display_config
-#import gauges.speedometer as speed
 import gauges.speedometer as speed
 import time
 import math
-pygame.init()
 
-display_config = get_display_config()
-SCREEN_WIDTH = get_display_config().get('RESOLUTION_X')
-SCREEN_HEIGHT = get_display_config().get('RESOLUTION_Y')
+class Display:
+    def __init__(self, speedometer):
+        pygame.init()
+        self.display_config = get_display_config()
+        self.SCREEN_WIDTH = self.display_config.get('RESOLUTION_X')
+        self.SCREEN_HEIGHT = self.display_config.get('RESOLUTION_Y')
+        self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        # Load gauge images
+        self.gauge_bg = pygame.image.load('assets/images/gauges/speedometer/speed_gauge_bg.png')
+        self.gauge_fg = pygame.image.load('assets/images/gauges/speedometer/speed_gauge.png')
+        
+        # Font and text properties
+        self.font = pygame.font.Font(None, 36)
 
-gauge_bg = pygame.image.load(
-    'assets/images/gauges/speedometer/speed_gauge_bg.png')
-gauge_fg = pygame.image.load(
-    'assets/images/gauges/speedometer/speed_gauge.png')
+        # Image rectangles
+        self.gauge_bg_rect = self.gauge_bg.get_rect()
+        self.gauge_fg_rect = self.gauge_fg.get_rect()
 
-gauge_bg_rect = gauge_bg.get_rect()
-gauge_fg_rect = gauge_fg.get_rect()
+        # Speedometer instance
+        self.speedometer = speedometer
+        
+        # Speed settings
+        self.MAX_SPEED = 100
+        self.MAX_ANGLE = 180
 
-font = pygame.font.Font(None, 36)
-angle = 0
+        # Timing variables
+        self.prev_time = 0.0
 
-MAX_SPEED = 100
-MAX_ANGLE = 180
+    def run(self):
+        try:
+            while True:
+                current_time = float(time.perf_counter())
+                # Calculate speed and display angle
+                speed = round(self.speedometer.calc_speed(), 1)
+                angle = -((speed / self.MAX_SPEED) * self.MAX_ANGLE)
 
-prev_time = 0.0
-current_time = 0.0
-between_time = 0.0
+                if current_time - self.prev_time >= 1/40:
+                    self.prev_time = current_time
 
+                    # Draw to screen
+                    self.screen.fill((0, 0, 0))
+                    rotated_gauge_bg = pygame.transform.rotate(self.gauge_bg, angle)
+                    rotated_gauge_bg_rect = rotated_gauge_bg.get_rect(center=self.gauge_fg_rect.center)
 
-speedometer = speed.Speedometer(speed_pin=17)
-try:
-    while True:
+                    self.screen.blit(rotated_gauge_bg, rotated_gauge_bg_rect)
+                    self.screen.blit(self.gauge_fg, self.gauge_fg_rect)
 
-        current_time = float(time.perf_counter())
-        speed_text = font.render(
-            f"{round(speedometer.calc_speed(), 1)}", True, (235, 235, 235))
-        angle = -((round(speedometer.calc_speed(), 4) / MAX_SPEED) * MAX_ANGLE)
+                    # Render speed text
+                    speed_text = self.font.render(f"{speed}", True, (235, 235, 235))
+                    self.screen.blit(speed_text, (self.gauge_fg_rect.center))
 
-        if float(current_time - prev_time) >= float(1/40):
-            prev_time = current_time
-            screen.fill((0, 0, 0))
-            rotated_gauge_bg = pygame.transform.rotate(gauge_bg, angle)
-            rotated_gauge_bg_rect = rotated_gauge_bg.get_rect(
-                center=gauge_fg_rect.center)
+                    pygame.display.flip()
 
-            screen.blit(rotated_gauge_bg, rotated_gauge_bg_rect)
-            screen.blit(gauge_fg, gauge_fg_rect)
-            screen.blit(speed_text, (gauge_fg_rect.center))
-            #screen.blit(shaft_RPM_text, (SCREEN_WIDTH // 8, gauge_fg_rect.centery))
+        except KeyboardInterrupt:
+            print("Display loop exited.")
 
-            pygame.display.flip()
-
-except KeyboardInterrupt:
-    print("exit")
