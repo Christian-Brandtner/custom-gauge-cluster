@@ -43,7 +43,6 @@ try:
         if float(current_time - prev_time) >= float(1/40):
             prev_time = current_time
             screen.fill((0, 0, 0))
-            speedometer.hall_detect()
             rotated_gauge_bg = pygame.transform.rotate(gauge_bg, angle)
             rotated_gauge_bg_rect = rotated_gauge_bg.get_rect(
                 center=gauge_fg_rect.center)
