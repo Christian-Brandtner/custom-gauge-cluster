@@ -3,7 +3,7 @@ import math
 from utils.config import get_vehicle_config
 from gpiozero import DigitalInputDevice
 
-class Speedometer:
+class FakeSpeedometer:
     def __init__(self, speed_pin):
         self.speed_pin = speed_pin
         self.hall_sensor = DigitalInputDevice(
@@ -12,7 +12,7 @@ class Speedometer:
         self.TIRE_DIAMETER = self.vehicle_config.get('TIRE_DIAMETER')
         self.DRIVE_RATIO = self.vehicle_config.get('DRIVE_RATIO')
         self.INCHES_PER_MIN_TO_MPH = 1056
-        self.AVERAGE_ITERATE = 50
+        self.AVERAGE_ITERATE = 100
         self.MAGNET_COUNT = 10
         self.time_between = time.perf_counter()
         self.prev_time = time.perf_counter()

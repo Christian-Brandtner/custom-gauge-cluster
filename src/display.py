@@ -1,7 +1,7 @@
 import pygame
 from utils.config import get_display_config
 #import gauges.speedometer as speed
-import gauges.fake_speed as speed
+import gauges.speedometer as speed
 import time
 import math
 pygame.init()
@@ -31,7 +31,7 @@ current_time = 0.0
 between_time = 0.0
 
 
-fake_speedometer = speed.FakeSpeedometer()
+fake_speedometer = speed.Speedometer()
 try:
     while True:
 
