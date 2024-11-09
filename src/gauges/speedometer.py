@@ -58,7 +58,6 @@ class Speedometer:
         return rounded_avg
 
     def hall_detect(self):
-        print("hello")
         self.time_between = time.perf_counter() - self.prev_time
         self.prev_time = time.perf_counter()
         self.avg_counter = (self.avg_counter + 1) % self.AVERAGE_ITERATE
