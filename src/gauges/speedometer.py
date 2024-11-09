@@ -20,6 +20,7 @@ class Speedometer:
         self.avg_counter = 0
         self.time_counter = 0
         self.calc_zero = True
+        self.tire_circumference = math.pi * self.TIRE_DIAMETER
 
     def calc_speed_time(self):
         speed_step = [15, 30]
@@ -46,9 +47,11 @@ class Speedometer:
             return rpm
 
     def calc_speed(self):
-        tire_circumference = math.pi * self.TIRE_DIAMETER
-        wheel_rpm = self.smooth_rpm() / self.DRIVE_RATIO
-        speed = (tire_circumference * wheel_rpm) / self.INCHES_PER_MIN_TO_MPH
+        if self.calc_if_zero():
+            speed = 0
+        else:
+            wheel_rpm = self.smooth_rpm() / self.DRIVE_RATIO
+            speed = (self.tire_circumference * wheel_rpm) / self.INCHES_PER_MIN_TO_MPH
         return speed
 
     def smooth_rpm(self):
