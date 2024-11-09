@@ -5,7 +5,7 @@ from display import Display  # Import the Display class directly
 
 if __name__ == "__main__":
     # Initialize speedometer and set sensor pin
-    speedometer = speed.Speedometer(speed_pin=17)
+    speedometer = speed.Speedometer()
 
     # Set up hall sensor detection
     sensor = DigitalInputDevice(17, pull_up=True)
