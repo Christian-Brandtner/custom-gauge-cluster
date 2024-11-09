@@ -46,6 +46,7 @@ class Display:
 
                 if current_time - self.prev_time >= 1/40:
                     self.prev_time = current_time
+
                     # Draw to screen
                     self.screen.fill((0, 0, 0))
                     rotated_gauge_bg = pygame.transform.rotate(self.gauge_bg, angle)
