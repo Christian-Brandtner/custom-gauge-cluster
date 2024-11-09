@@ -4,11 +4,17 @@ from gpiozero import DigitalInputDevice
 from display import Display  # Import the Display class directly
 
 if __name__ == "__main__":
-    speedometer = speed.Speedometer()
-    display = Display.run(speedometer)
+    # Initialize speedometer and set sensor pin
+    speedometer = speed.Speedometer(speed_pin=17)
 
-sensor = DigitalInputDevice(17, pull_up=True)
-sensor.when_activated = speedometer.hall_detect
+    # Set up hall sensor detection
+    sensor = DigitalInputDevice(17, pull_up=True)
+    sensor.when_activated = speedometer.hall_detect
+
+    # Initialize display with speedometer instance and start it
+    display = Display(speedometer)
+    display.run()
+
 
 
 # display = Display(speedometer)

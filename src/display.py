@@ -1,6 +1,5 @@
 import pygame
 from utils.config import get_display_config
-import gauges.speedometer as speed
 import time
 import math
 
@@ -37,8 +36,12 @@ class Display:
         try:
             while True:
                 current_time = float(time.perf_counter())
-                # Calculate speed and display angle
-                speed = round(self.speedometer.calc_speed(), 1)
+                # Calculate speed and display angle, with a default of 0 if undefined
+                try:
+                    speed = round(self.speedometer.calc_speed(), 1)
+                except AttributeError:
+                    speed = 0
+
                 angle = -((speed / self.MAX_SPEED) * self.MAX_ANGLE)
 
                 if current_time - self.prev_time >= 1/40:
@@ -60,4 +63,3 @@ class Display:
 
         except KeyboardInterrupt:
             print("Display loop exited.")
-
