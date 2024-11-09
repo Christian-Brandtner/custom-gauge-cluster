@@ -1,10 +1,10 @@
 import time
 import gauges.speedometer as speed
-from display import Display  # Import the Display class directly
+#from display import Display  # Import the Display class directly
 
 if __name__ == "__main__":
     speedometer = speed.Speedometer(speed_pin=17)
-    display = Display(speedometer)
+    #display = Display(speedometer)
     
     speedometer.run()  # Start the speedometer data acquisition
-    display.run()      # Start the display loop
+    #display.run()      # Start the display loop
