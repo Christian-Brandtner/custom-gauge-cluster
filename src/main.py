@@ -13,7 +13,7 @@ def hall_detect():
 
 
 # display = Display(speedometer)
-speedometer.run()
+# speedometer.run()
 # speedometer.run()  # Start the speedometer data acquisition
 # display.run()      # Start the display loop
 
