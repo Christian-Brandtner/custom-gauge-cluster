@@ -38,7 +38,7 @@ class Speedometer:
         return seconds
 
     def calc_shaft_rpm(self, seconds):
-        if seconds == 0 or seconds > 1.2:
+        if (time.perf_counter()-self.prev_time) == 0 or (time.perf_counter()-self.prev_time) > 1.2:
             return 0
         else:
             rpm = 60 / seconds
@@ -63,6 +63,8 @@ class Speedometer:
         self.avg_counter = (self.avg_counter + 1) % self.AVERAGE_ITERATE
         self.time_counter = (self.time_counter + 1) % self.MAGNET_COUNT
         self.time_array[self.time_counter] = self.time_between
+    
+            
 
     # def run(self):
     #     self.hall_sensor.when_activated = self.hall_detect
