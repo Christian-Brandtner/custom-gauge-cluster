@@ -68,7 +68,7 @@ class Speedometer:
 
     def run(self):
         #self.hall_sensor.when_activated = self.hall_detect
-        #self.hall_sensor.when_activated = print("active")
+        self.hall_sensor.when_activated = print("active")
         try:
             while True:
                 time.sleep(1)
