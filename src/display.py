@@ -45,6 +45,7 @@ class Display:
                 angle = -((speed / self.MAX_SPEED) * self.MAX_ANGLE)
 
                 if current_time - self.prev_time >= 1/40:
+                    self.speedometer.calc_if_zero()
                     self.prev_time = current_time
 
                     # Draw to screen
