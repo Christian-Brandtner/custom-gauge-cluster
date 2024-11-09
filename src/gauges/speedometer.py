@@ -53,7 +53,7 @@ class Speedometer:
 
     def smooth_rpm(self):
         self.avg_array[self.avg_counter] = self.calc_shaft_rpm(
-            self.calc_seconds(self.time_array[self.time_counter]))
+            self.calc_seconds(self.time_array[self.time_counter]), self.calc_if_zero())
         avg = sum(self.avg_array) / self.AVERAGE_ITERATE
         rounded_avg = round(avg)
         return rounded_avg
@@ -69,6 +69,7 @@ class Speedometer:
         if time.perf_counter() - self.prev_time >= 1.2 or time.perf_counter() - self.prev_time == 0:
             self.calc_zero = True
         else: self.calc_zero = False
+        return self.calc_zero
 
     # def run(self):
     #     self.hall_sensor.when_activated = self.hall_detect
