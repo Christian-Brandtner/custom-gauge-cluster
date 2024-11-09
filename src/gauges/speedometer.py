@@ -66,4 +66,5 @@ class Speedometer:
         self.time_array[self.time_counter] = self.time_between
 
     def run(self):
-        self.hall_sensor.when_activated = self.hall_detect()
+        self.hall_sensor.when_activated = self.hall_detect
+        self.hall_sensor.when_activated = print("active")
