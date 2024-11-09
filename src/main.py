@@ -5,7 +5,7 @@ from display import Display  # Import the Display class directly
 
 if __name__ == "__main__":
     speedometer = speed.Speedometer()
-    display = Display.run()
+    display = Display.run(speedometer)
 
 sensor = DigitalInputDevice(17, pull_up=True)
 sensor.when_activated = speedometer.hall_detect
