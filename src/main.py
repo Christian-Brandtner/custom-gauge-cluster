@@ -1,13 +1,21 @@
 import time
 import gauges.speedometer as speed
+from gpiozero import DigitalInputDevice
 # from display import Display  # Import the Display class directly
 
 if __name__ == "__main__":
-    speedometer = speed.Speedometer(speed_pin=17)
-    # display = Display(speedometer)
-    speedometer.run()
-    # speedometer.run()  # Start the speedometer data acquisition
-    # display.run()      # Start the display loop
+    speedometer = speed.Speedometer()
+
+sensor = DigitalInputDevice(17, pull_up=True)
+sensor.when_activated = speedometer.hall_detect
+def hall_detect():
+    print("Hall sensor triggered")
+
+
+# display = Display(speedometer)
+speedometer.run()
+# speedometer.run()  # Start the speedometer data acquisition
+# display.run()      # Start the display loop
 
 try:
     while True:

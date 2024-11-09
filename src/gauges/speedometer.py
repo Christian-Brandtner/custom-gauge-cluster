@@ -1,13 +1,12 @@
 import time
 import math
 from utils.config import get_vehicle_config
-from gpiozero import DigitalInputDevice
+
 
 class Speedometer:
-    def __init__(self, speed_pin):
-        self.speed_pin = speed_pin
-        self.hall_sensor = DigitalInputDevice(
-            self.speed_pin, pull_up=True, bounce_time=0.001)
+    def __init__(self):
+        
+        
         self.vehicle_config = get_vehicle_config()  
         self.TIRE_DIAMETER = self.vehicle_config.get('TIRE_DIAMETER')
         self.DRIVE_RATIO = self.vehicle_config.get('DRIVE_RATIO')
@@ -66,7 +65,7 @@ class Speedometer:
         self.time_counter = (self.time_counter + 1) % self.MAGNET_COUNT
         self.time_array[self.time_counter] = self.time_between
 
-    def run(self):
-        self.hall_sensor.when_activated = self.hall_detect
-        self.hall_sensor.when_activated = print("active")
+    # def run(self):
+    #     self.hall_sensor.when_activated = self.hall_detect
+    #     self.hall_sensor.when_activated = print("active")
         
