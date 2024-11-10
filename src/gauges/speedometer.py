@@ -5,18 +5,18 @@ from utils.config import get_vehicle_config
 
 class Speedometer:
     def __init__(self):
-        
-        
         self.vehicle_config = get_vehicle_config()  
         self.TIRE_DIAMETER = self.vehicle_config.get('TIRE_DIAMETER')
         self.DRIVE_RATIO = self.vehicle_config.get('DRIVE_RATIO')
         self.INCHES_PER_MIN_TO_MPH = 1056
         self.AVERAGE_ITERATE = 50
         self.MAGNET_COUNT = 10
+        self.SENSOR_COUNT = 3
         self.time_between = time.perf_counter()
         self.prev_time = time.perf_counter()
         self.avg_array = [0.0000] * self.AVERAGE_ITERATE
         self.time_array = [0.0000] * (self.MAGNET_COUNT)
+        self.sensor_time = [0.0000] * (self.SENSOR_COUNT)
         self.avg_counter = 0
         self.time_counter = 0
         self.calc_zero = True
@@ -61,8 +61,9 @@ class Speedometer:
         rounded_avg = round(avg)
         return rounded_avg
 
-    def hall_detect(self):
+    def hall_detect(self, sensor):
         self.time_between = time.perf_counter() - self.prev_time
+        self.sensor_time[sensor] = self.time_between
         self.prev_time = time.perf_counter()
         self.avg_counter = (self.avg_counter + 1) % self.AVERAGE_ITERATE
         self.time_counter = (self.time_counter + 1) % self.MAGNET_COUNT
