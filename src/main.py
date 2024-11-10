@@ -28,6 +28,8 @@ if __name__ == "__main__":
 # for FAST SENSOR, fast_time_between * (10/1)
 # for MED SENSOR, med_time_between * (10/5)
 
+# ONLY WAIT FOR INTERRUPT FOR OTHER SENSORS IF GOING SLOW ENOUGH TO HANDLE THEM
+
     # Initialize display with speedometer instance and start it
     display = Display(speedometer)
     display.run()
