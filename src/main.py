@@ -8,19 +8,21 @@ if __name__ == "__main__":
     speedometer = speed.Speedometer()
 
     # Set up hall sensor detection
-    sensor1 = DigitalInputDevice(17, pull_up=True) # set up 3 hall sensors
-    sensor2 = DigitalInputDevice(18, pull_up=True)
-    sensor3 = DigitalInputDevice(19, pull_up=True)
+    def sensor(pin, magnet_count): 
+        sensor = [DigitalInputDevice(pin, pull_up=True), magnet_count]
+        return sensor
     
-    sensor1.when_activated = speedometer.hall_detect(0) #updates time_between for FAST SENSOR
+    sensors = [sensor(17, speedometer.MAGNET_COUNT[0]), sensor(18, speedometer.MAGNET_COUNT[1]), sensor(19, speedometer.MAGNET_COUNT[2])] # set up 3 hall sensors
+    
+    sensors[0].when_activated = lambda: speedometer.hall_detect(0) #updates time_between for FAST SENSOR
     
     if speedometer.sensor_time[0] > "${specified calculated mph for vehicle}":
         #if FAST SENSOR detects too low of a speed, use MED SENSOR
         #speed based on sensor_time (between_time of FAST SENSOR)
-        sensor2.when_activated = speedometer.hall_detect(1) #update time_between for MED SENSOR
+        sensors[1].when_activated = lambda: speedometer.hall_detect(1) #update time_between for MED SENSOR
         # if sensor_time of MED SENSOR too slow, use FAST SENSOR
         if speedometer.sensor_time[1] > "${specified calculated mph for vehicle}":
-            sensor3.when_activated = speedometer.hall_detect(2)
+            sensors[2].when_activated = lambda: speedometer.hall_detect(2)
             
 # NEED CALCULATE DIFFERENT SENSORS VALUE TO NORMALIZE
 # time_between of sensor * (sensor_magnet_count / fast_sensor_magnet_count)
