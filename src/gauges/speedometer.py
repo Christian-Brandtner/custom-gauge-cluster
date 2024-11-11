@@ -15,7 +15,7 @@ class Speedometer:
         self.SENSOR_DIVIDERS = {
             0: 1,
             1: 5, # CALCULATED BASED OFF MAGNET_COUNT
-            5: 10
+            3: 10
         }
         self.time_between = time.perf_counter()
         self.prev_time = time.perf_counter()
