@@ -35,8 +35,8 @@ class Speedometer:
             return rpm
 
     def calc_speed(self):
-        if self.calc_if_zero():
-            self.time_array[self.time_counter] = 0
+        # if self.calc_if_zero():
+        #     self.time_array[self.time_counter] = 0 ## 0 time is infinite speed... ### set rpm array to 0 instead
         wheel_rpm = self.smooth_rpm() / self.DRIVE_RATIO
         speed = (self.tire_circumference * wheel_rpm) / self.INCHES_PER_MIN_TO_MPH
         return speed
@@ -50,11 +50,13 @@ class Speedometer:
 
     def hall_detect(self, sensor):
         self.time_between = time.perf_counter() - self.prev_time # calculate delta time
-        self.sensor_time[sensor] = self.time_between # store delta time for current sensor
+        self.sensor_time[sensor] = self.time_between # store delta time for current sensor ## used for determining current sensor
         self.prev_time = time.perf_counter() # reset clock for getting delta time
         self.avg_counter = (self.avg_counter + 1) % self.AVERAGE_ITERATE # track which part of array to save shaft rpm to
-        self.time_counter = (self.time_counter + 1) % self.MAGNET_COUNT[0] ### Assumes 10 magnets, maybe needs dynamic code
-        self.time_array[self.time_counter] = self.time_between / self.SENSOR_DIVIDERS[sensor] 
+        self.time_counter = (self.time_counter + 1) % self.MAGNET_COUNT[0] ### Assumes 10 magnets??, maybe needs dynamic code. 
+        ### ignore magnet count, just assume we're storing 10 time values. average the 10 values, and calculate 1 rpm value with that average. Then average the rpm value.
+        ### should smooth rpm calculations and let us lower the rpm amounts stored, hopefully improving responsiveness
+        self.time_array[self.time_counter] = self.time_between / self.SENSOR_DIVIDERS[sensor] # set time_between based on the number of magnets the current sensor has
 
         
     def calc_if_zero(self):
