@@ -49,17 +49,14 @@ class Speedometer:
         return rounded_avg
 
     def hall_detect(self, sensor):
-        self.time_between = time.perf_counter() - self.prev_time
-        self.sensor_time[sensor] = self.time_between
-        self.prev_time = time.perf_counter()
-        self.avg_counter = (self.avg_counter + 1) % self.AVERAGE_ITERATE
-        self.time_counter = (self.time_counter + 1) % self.MAGNET_COUNT[0]
-        self.time_array[self.time_counter] = self.time_between / self.SENSOR_DIVIDERS[sensor]
+        self.time_between = time.perf_counter() - self.prev_time # calculate delta time
+        self.sensor_time[sensor] = self.time_between # store delta time for current sensor
+        self.prev_time = time.perf_counter() # reset clock for getting delta time
+        self.avg_counter = (self.avg_counter + 1) % self.AVERAGE_ITERATE # track which part of array to save shaft rpm to
+        self.time_counter = (self.time_counter + 1) % self.MAGNET_COUNT[0] ### Assumes 10 magnets, maybe needs dynamic code
+        self.time_array[self.time_counter] = self.time_between / self.SENSOR_DIVIDERS[sensor] 
 
-        # self.time_array[self.time_counter] = self.time_between
-        # if sensor(1): self.time_array[self.time_counter] = self.time_between / 5
-        # time_between of sensor / (sensor_magnet_count / fast_sensor_magnet_count)
-    
+        
     def calc_if_zero(self):
         if time.perf_counter() - self.prev_time >= 1.2 or time.perf_counter() - self.prev_time == 0:
             self.calc_zero = True
@@ -67,6 +64,9 @@ class Speedometer:
         return self.calc_zero
 
     
+    # self.time_array[self.time_counter] = self.time_between
+        # if sensor(1): self.time_array[self.time_counter] = self.time_between / 5
+        # time_between of sensor / (sensor_magnet_count / fast_sensor_magnet_count)
     
     # def run(self):
     #     self.hall_sensor.when_activated = self.hall_detect
