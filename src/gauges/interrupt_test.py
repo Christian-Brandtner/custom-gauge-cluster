@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
     # Simulate calling hall_detect and measure execution time
     sensor = 0  # Testing with the first sensor (0)
-    iterations = 1000  # Number of test iterations
+    iterations = 100000  # Number of test iterations
 
     start_time = time.perf_counter()
     for _ in range(iterations):
