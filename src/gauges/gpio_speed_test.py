@@ -1,39 +1,35 @@
 import time
-from gpiozero import LED, DigitalInputDevice
+import RPi.GPIO as GPIO
 
-# GPIO pin setup
-output_pin = 17  # Output pin
-input_pin = 18   # Input pin
+# GPIO setup
+OUTPUT_PIN = 17
+INPUT_PIN = 18
 
-# Configure the pins
-led = LED(output_pin)
-sensor = DigitalInputDevice(input_pin, pull_up=True)
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(OUTPUT_PIN, GPIO.OUT)
+GPIO.setup(INPUT_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 # Timing variables
 interrupt_times = []
 test_iterations = 1000
 
-# Interrupt callback
 
-
-def interrupt_handler():
-    global interrupt_start
-    interrupt_times.append(time.perf_counter() - interrupt_start)
+def interrupt_handler(channel):
+    global start_time
+    interrupt_times.append(time.perf_counter() - start_time)
 
 
 # Attach the interrupt
-sensor.when_activated = interrupt_handler
+GPIO.add_event_detect(INPUT_PIN, GPIO.RISING, callback=interrupt_handler)
 
-# Run the test
 print(f"Running {test_iterations} iterations...")
 for _ in range(test_iterations):
-    interrupt_start = time.perf_counter()
-    led.on()  # Trigger the output pin
-    time.sleep(0.00001)  # Ensure pulse is long enough to detect
-    led.off()  # Turn off the output pin
-    time.sleep(0.001)  # Short delay between pulses
+    start_time = time.perf_counter()
+    GPIO.output(OUTPUT_PIN, GPIO.HIGH)  # Set output high
+    GPIO.output(OUTPUT_PIN, GPIO.LOW)   # Set output low
+    time.sleep(0.001)  # Allow some time for interrupts to process
 
-# Calculate and display results
+# Calculate results
 if interrupt_times:
     avg_time = sum(interrupt_times) / len(interrupt_times) * \
         1e6  # Convert to microseconds
@@ -42,5 +38,4 @@ else:
     print("No interrupts detected!")
 
 # Cleanup
-sensor.close()
-led.close()
+GPIO.cleanup()
