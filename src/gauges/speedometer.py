@@ -5,24 +5,25 @@ from utils.config import get_vehicle_config
 
 class Speedometer:
     def __init__(self):
-        self.vehicle_config = get_vehicle_config()  
+        self.vehicle_config = get_vehicle_config()
         self.TIRE_DIAMETER = self.vehicle_config.get('TIRE_DIAMETER')
         self.DRIVE_RATIO = self.vehicle_config.get('DRIVE_RATIO')
         self.INCHES_PER_MIN_TO_MPH = 1056
-        self.AVERAGE_ITERATE = 50
+        self.RPM_ARRAY_COUNT = 10
         self.MAGNET_COUNT = [10, 5, 1]
         self.SENSOR_COUNT = 3
-        self.SENSOR_DIVIDERS = {
-            0: 1,
-            1: 5, # CALCULATED BASED OFF MAGNET_COUNT
-            2: 10
+        self.TIME_COUNT = 10 # how many time values are stored for calculating rpm
+        self.SENSOR_DIVIDERS = { # divide pulse time by amount of magnets on sensor. 
+            0: self.MAGNET_COUNT[0],
+            1: self.MAGNET_COUNT[1], 
+            2: self.MAGNET_COUNT[2]
         }
         self.time_between = time.perf_counter()
         self.prev_time = time.perf_counter()
-        self.avg_array = [0.0000] * self.AVERAGE_ITERATE
-        self.time_array = [0.0000] * (self.MAGNET_COUNT[0])
-        self.sensor_time = [0.0000] * (self.SENSOR_COUNT)
-        self.avg_counter = 0
+        self.rpm_array = [0.0000] * self.RPM_ARRAY_COUNT
+        self.time_array = [0.0000] * (self.TIME_COUNT)
+        self.sensor_time = [0.0000] * (self.SENSOR_COUNT) # store pulse time for current sensor
+        self.rpm_counter = 0
         self.time_counter = 0
         self.calc_zero = True
         self.tire_circumference = math.pi * self.TIRE_DIAMETER
@@ -38,42 +39,62 @@ class Speedometer:
         # if self.calc_if_zero():
         #     self.time_array[self.time_counter] = 0 ## 0 time is infinite speed... ### set rpm array to 0 instead
         wheel_rpm = self.smooth_rpm() / self.DRIVE_RATIO
-        speed = (self.tire_circumference * wheel_rpm) / self.INCHES_PER_MIN_TO_MPH
+        speed = (self.tire_circumference * wheel_rpm) / \
+            self.INCHES_PER_MIN_TO_MPH
         return speed
 
     def smooth_rpm(self):
-        self.avg_array[self.avg_counter] = self.calc_shaft_rpm(
+        self.rpm_array[self.rpm_counter] = self.calc_shaft_rpm(
             self.time_array[self.time_counter], self.calc_if_zero())
-        avg = sum(self.avg_array) / self.AVERAGE_ITERATE
+        avg = sum(self.rpm_array) / self.RPM_ARRAY_COUNT
         rounded_avg = round(avg)
         return rounded_avg
+    
+
+
+
 
     def hall_detect(self, sensor):
-        self.time_between = time.perf_counter() - self.prev_time # calculate delta time
-        self.sensor_time[sensor] = self.time_between # store delta time for current sensor ## used for determining current sensor
-        self.prev_time = time.perf_counter() # reset clock for getting delta time
-        self.avg_counter = (self.avg_counter + 1) % self.AVERAGE_ITERATE # track which part of array to save shaft rpm to
-        self.time_counter = (self.time_counter + 1) % self.MAGNET_COUNT[0] ### Assumes 10 magnets??, maybe needs dynamic code. 
-        ### ignore magnet count, just assume we're storing 10 time values. average the 10 values, and calculate 1 rpm value with that average. Then average the rpm value.
-        ### should smooth rpm calculations and let us lower the rpm amounts stored, hopefully improving responsiveness
-        self.time_array[self.time_counter] = self.time_between / self.SENSOR_DIVIDERS[sensor] # set time_between based on the number of magnets the current sensor has
+        # Calculate delta time (time between current and previous detection)
+        self.time_between = time.perf_counter() - self.prev_time
+        # Store delta time for the current sensor (used for switching logic)
+        self.sensor_time[sensor] = self.time_between
+        self.prev_time = time.perf_counter()  # Reset clock for the next pulse detection
 
-        
+        # Update counters
+        # Circular buffer index for averaging RPM
+        self.rpm_counter = (self.rpm_counter + 1) % self.RPM_ARRAY_COUNT
+        # Fixed to store 10 time values for smoothing RPM calculation
+        self.time_counter = (self.time_counter + 1) % self.TIME_COUNT
+
+        # Store the adjusted time value (accounting for sensor's magnet count)
+        self.time_array[self.time_counter] = self.time_between / \
+            self.SENSOR_DIVIDERS[sensor]
+
+
+
+
     def calc_if_zero(self):
         if time.perf_counter() - self.prev_time >= 1.2 or time.perf_counter() - self.prev_time == 0:
             self.calc_zero = True
-        else: self.calc_zero = False
+        else:
+            self.calc_zero = False
         return self.calc_zero
-
     
+
+
+
+
+
+
     # self.time_array[self.time_counter] = self.time_between
         # if sensor(1): self.time_array[self.time_counter] = self.time_between / 5
         # time_between of sensor / (sensor_magnet_count / fast_sensor_magnet_count)
-    
+
     # def run(self):
     #     self.hall_sensor.when_activated = self.hall_detect
     #     self.hall_sensor.when_activated = print("active")
-        
+
 # def calc_speed_time(self):
     #     speed_step = [15, 30]
     #     speed_time = [0.0000] * len(speed_step)
